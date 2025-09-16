@@ -6,11 +6,10 @@ if (isset($_GET['id'])) {
     $id = $_GET['id'];
     $sql = "SELECT * FROM members WHERE id = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $id);
+    $stmt->bindParam(1, $id, PDO::PARAM_INT);
     $stmt->execute();
-    $result = $stmt->get_result();
-    $member = $result->fetch_assoc();
-    $stmt->close();
+    $member = $stmt->fetch(PDO::FETCH_ASSOC);
+    //$stmt->close(); // PDO does not have a close method like mysqli
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -57,18 +56,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $sql = "UPDATE members SET name = ?, email = ?, phone = ?, specialization = ?, image = ? WHERE id = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sssssi", $name, $email, $phone, $specialization, $image, $id);
+    $stmt->execute([$name, $email, $phone, $specialization, $image, $id]);
 
-    if ($stmt->execute()) {
-        header("Location: index.php");
-        exit();
-    } else {
-        echo "Lỗi: " . $stmt->error;
-    }
+    header("Location: index.php");
+    exit();
 
-    $stmt->close();
+    //$stmt->close(); // PDO does not have a close method like mysqli
 }
-$conn->close();
+//$conn->close(); // PDO does not have a close method like mysqli
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -77,6 +72,7 @@ $conn->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sửa Thông Tin Thành Viên</title>
     <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.querySelector('form');
@@ -119,49 +115,50 @@ $conn->close();
 </head>
 <body>
     <div class="container">
-        <h1>Sửa Thông Tin Thành Viên</h1>
+        <h1 class="my-4 text-center">Sửa Thông Tin Thành Viên</h1>
         <?php if ($member): ?>
         <form action="edit.php" method="POST" enctype="multipart/form-data">
             <input type="hidden" name="id" value="<?php echo $member['id']; ?>">
             <input type="hidden" name="current_image" id="currentImageHidden" value="<?php echo htmlspecialchars($member['image'] ?? ''); ?>">
-            <div class="form-layout">
-                <div class="form-left">
-                    <div class="form-group">
-                        <label for="name">Tên:</label>
-                        <input type="text" id="name" name="name" value="<?php echo htmlspecialchars($member['name']); ?>" required>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Tên:</label>
+                        <input type="text" id="name" name="name" value="<?php echo htmlspecialchars($member['name']); ?>" class="form-control" required>
                     </div>
-                    <div class="form-group">
-                        <label for="email">Email:</label>
-                        <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($member['email']); ?>" required>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email:</label>
+                        <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($member['email']); ?>" class="form-control" required>
                     </div>
-                    <div class="form-group">
-                        <label for="phone">Điện Thoại:</label>
-                        <input type="tel" id="phone" name="phone" value="<?php echo htmlspecialchars($member['phone']); ?>">
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Điện Thoại:</label>
+                        <input type="tel" id="phone" name="phone" value="<?php echo htmlspecialchars($member['phone']); ?>" class="form-control">
                     </div>
-                    <div class="form-group">
-                        <label for="specialization">Sở Trường:</label>
-                        <input type="text" id="specialization" name="specialization" value="<?php echo htmlspecialchars($member['specialization'] ?? ''); ?>">
+                    <div class="mb-3">
+                        <label for="specialization" class="form-label">Sở Trường:</label>
+                        <input type="text" id="specialization" name="specialization" value="<?php echo htmlspecialchars($member['specialization'] ?? ''); ?>" class="form-control">
                     </div>
                 </div>
-                <div class="form-right">
-                    <div class="form-group">
-                        <label for="image">Ảnh Đại Diện:</label>
-                        <div class="image-upload-section">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="image" class="form-label">Ảnh Đại Diện:</label>
+                        <div class="image-upload-section p-3 border rounded text-center mb-3">
                             Chọn ảnh (JPG, PNG, GIF, tối đa 5MB)
                             <input type="file" id="image" name="image" accept="image/*" style="display: none;">
                         </div>
-                        <img id="imagePreview" class="image-preview" src="" alt="Xem trước ảnh">
+                        <img id="imagePreview" class="img-fluid img-thumbnail" src="" alt="Xem trước ảnh" style="display: none;">
                     </div>
                 </div>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Cập Nhật Thành Viên">
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary">Cập Nhật Thành Viên</button>
+                <a href="index.php" class="btn btn-secondary">Quay lại danh sách</a>
             </div>
         </form>
         <?php else: ?>
-            <p>Không tìm thấy thành viên.</p>
+            <p class="alert alert-warning">Không tìm thấy thành viên.</p>
         <?php endif; ?>
-        <p><a href="index.php">Quay lại danh sách</a></p>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>

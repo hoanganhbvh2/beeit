@@ -39,17 +39,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $sql = "INSERT INTO members (name, email, phone, specialization, image) VALUES (?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sssss", $name, $email, $phone, $specialization, $image);
+    $stmt->execute([$name, $email, $phone, $specialization, $image]);
 
-    if ($stmt->execute()) {
-        header("Location: index.php");
-        exit();
-    } else {
-        echo "Lỗi: " . $stmt->error;
-    }
+    header("Location: index.php");
+    exit();
 
-    $stmt->close();
-    $conn->close();
+    //$stmt->close(); // PDO does not have a close method like mysqli
+    //$conn->close(); // PDO does not have a close method like mysqli
 }
 ?>
 <!DOCTYPE html>
@@ -59,6 +55,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thêm Thành Viên Mới</title>
     <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.querySelector('form');
@@ -116,43 +113,44 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 <body>
     <div class="container">
-        <h1>Thêm Thành Viên Mới</h1>
+        <h1 class="my-4 text-center">Thêm Thành Viên Mới</h1>
         <form action="add.php" method="POST" enctype="multipart/form-data">
-            <div class="form-layout">
-                <div class="form-left">
-                    <div class="form-group">
-                        <label for="name">Tên:</label>
-                        <input type="text" id="name" name="name" required>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Tên:</label>
+                        <input type="text" id="name" name="name" class="form-control" required>
                     </div>
-                    <div class="form-group">
-                        <label for="email">Email:</label>
-                        <input type="email" id="email" name="email" required>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email:</label>
+                        <input type="email" id="email" name="email" class="form-control" required>
                     </div>
-                    <div class="form-group">
-                        <label for="phone">Điện Thoại:</label>
-                        <input type="tel" id="phone" name="phone">
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Điện Thoại:</label>
+                        <input type="tel" id="phone" name="phone" class="form-control">
                     </div>
-                    <div class="form-group">
-                        <label for="specialization">Sở Trường:</label>
-                        <input type="text" id="specialization" name="specialization">
+                    <div class="mb-3">
+                        <label for="specialization" class="form-label">Sở Trường:</label>
+                        <input type="text" id="specialization" name="specialization" class="form-control">
                     </div>
                 </div>
-                <div class="form-right">
-                    <div class="form-group">
-                        <label for="image">Ảnh Đại Diện:</label>
-                        <div class="image-upload-section">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="image" class="form-label">Ảnh Đại Diện:</label>
+                        <div class="image-upload-section p-3 border rounded text-center mb-3">
                             Chọn ảnh (JPG, PNG, GIF, tối đa 5MB)
                             <input type="file" id="image" name="image" accept="image/*" style="display: none;">
                         </div>
-                        <img id="imagePreview" class="image-preview" src="" alt="Xem trước ảnh">
+                        <img id="imagePreview" class="img-fluid img-thumbnail" src="" alt="Xem trước ảnh" style="display: none;">
                     </div>
                 </div>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Thêm Thành Viên">
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary">Thêm Thành Viên</button>
+                <a href="index.php" class="btn btn-secondary">Quay lại danh sách</a>
             </div>
         </form>
-        <p><a href="index.php">Quay lại danh sách</a></p>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>

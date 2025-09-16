@@ -1,20 +1,19 @@
 <?php
-include 'includes/db_connect.php';
+include '../../includes/db_connect.php';
 
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
 
-    $sql = "DELETE FROM members WHERE id = ?";
-    $stmt = $conn->prepare($sql);
+    $stmt = $conn->prepare("DELETE FROM activities WHERE id = ?");
     $stmt->execute([$id]);
 
-    header("Location: index.php");
+    header("Location: activity_management.php");
     exit();
 
     //$stmt->close(); // PDO does not have a close method like mysqli
     //$conn->close(); // PDO does not have a close method like mysqli
 } else {
-    header("Location: index.php");
+    echo "Không có ID hoạt động được cung cấp để xóa.";
     exit();
 }
 ?>

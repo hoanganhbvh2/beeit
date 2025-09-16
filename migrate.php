@@ -14,14 +14,14 @@ function log_message($message) {
 function get_ran_migrations($conn) {
     $ran_migrations = [];
     $sql = "SELECT migration FROM migrations";
-    $result = $conn->query($sql);
+    $stmt = $conn->prepare($sql);
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
     if ($result) {
-        while ($row = $result->fetch_assoc()) {
-            $ran_migrations[] = $row['migration'];
-        }
+        $ran_migrations = $result;
     } else {
-        log_message("Lỗi khi đọc bảng migrations: " . $conn->error);
+        log_message("Lỗi khi đọc bảng migrations: " . $stmt->errorInfo()[2]);
     }
     return $ran_migrations;
 }
@@ -29,35 +29,28 @@ function get_ran_migrations($conn) {
 function record_migration($conn, $migration_file, $batch) {
     $sql = "INSERT INTO migrations (migration, batch) VALUES (?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("si", $migration_file, $batch);
-
-    if (!$stmt->execute()) {
-        log_message("Lỗi khi ghi log migration '{$migration_file}': " . $stmt->error);
+    
+    if (!$stmt->execute([$migration_file, $batch])) {
+        log_message("Lỗi khi ghi log migration '{$migration_file}': " . $stmt->errorInfo()[2]);
     }
-    $stmt->close();
 }
 
 function get_next_batch_number($conn) {
     $sql = "SELECT MAX(batch) as max_batch FROM migrations";
-    $result = $conn->query($sql);
-    if ($result && $row = $result->fetch_assoc()) {
-        return ($row['max_batch'] ?? 0) + 1;
-    }
-    return 1;
+    $stmt = $conn->prepare($sql);
+    $stmt->execute();
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return ($row['max_batch'] ?? 0) + 1;
 }
 
 function execute_sql_file($conn, $file_path) {
     $sql_content = file_get_contents($file_path);
-    if ($conn->multi_query($sql_content)) {
-        do {
-            // Duyệt qua các kết quả để tránh lỗi commands out of sync
-            if ($result = $conn->store_result()) {
-                $result->free();
-            }
-        } while ($conn->more_results() && $conn->next_result());
+    try {
+        $conn->exec($sql_content);
         return true;
-    } else {
-        log_message("Lỗi khi thực thi SQL từ '{$file_path}': " . $conn->error);
+    } catch (PDOException $e) {
+        log_message("Lỗi khi thực thi SQL từ '{$file_path}': " . $e->getMessage());
         return false;
     }
 }
@@ -129,7 +122,7 @@ if (empty($migrations_to_run)) {
     log_message("Tất cả migration trong batch " . $next_batch . " đã chạy xong.");
 }
 
-$conn->close();
+//$conn->close(); // PDO does not have a close method like mysqli
 log_message("Quá trình migration hoàn tất.");
 
 ?>

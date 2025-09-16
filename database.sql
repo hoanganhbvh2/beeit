@@ -13,12 +13,12 @@ CREATE TABLE IF NOT EXISTS members (
 );
 
 -- Thêm cột specialization nếu nó chưa tồn tại
--- ALTER TABLE members
--- ADD COLUMN specialization VARCHAR(100) AFTER phone;
+ALTER TABLE members
+ADD COLUMN specialization VARCHAR(100) AFTER phone;
 
 -- Thêm cột image nếu nó chưa tồn tại
--- ALTER TABLE members
--- ADD COLUMN image VARCHAR(255) AFTER specialization;
+ALTER TABLE members
+ADD COLUMN image VARCHAR(255) AFTER specialization;
 
 CREATE TABLE IF NOT EXISTS migrations (
     id INT AUTO_INCREMENT PRIMARY KEY,
