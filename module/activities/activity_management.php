@@ -27,7 +27,6 @@
                 </ul>
             </div>
         </nav>
-        <h1 class="my-4 text-center">Quản Lý Hoạt Động</h1>
         <div class="statistics mb-4 p-3 border rounded">
             <h2 class="text-center mb-3">Thống Kê Hoạt Động</h2>
             <div class="row">
@@ -81,12 +80,14 @@
                     <th>Mô Tả</th>
                     <th>Ngày Hoạt Động</th>
                     <th>Thành viên tham gia</th>
+                    <th>Tổng số lượng người tham gia</th>
                     <th>Hành động</th>
                 </tr>
             </thead>
             <tbody>
                 <?php
                 $sql = "SELECT a.*, 
+                               COUNT(DISTINCT ma.member_id) AS total_participants,
                                GROUP_CONCAT(DISTINCT CONCAT(m.name, ' (BEE', m.id, ')') ORDER BY m.name SEPARATOR ', ') AS participating_members
                         FROM activities a
                         LEFT JOIN member_activities ma ON a.id = ma.activity_id AND ma.participation_status = 'tham_gia'
@@ -105,13 +106,14 @@
                         echo "<td>" . htmlspecialchars($row["description"]) . "</td>";
                         echo "<td>" . $row["activity_date"] . "</td>";
                         echo "<td>" . (empty($row['participating_members']) ? 'Chưa có' : htmlspecialchars($row['participating_members'])) . "</td>";
+                        echo "<td>" . $row['total_participants'] . "</td>";
                         echo "<td>
                                 <a href='manage_participation.php?activity_id=" . $row["id"] . "' class='btn btn-secondary btn-sm'>Quản lý tham gia</a>
                               </td>";
                         echo "</tr>";
                     }
                 } else {
-                    echo "<tr><td colspan='6'>Không có hoạt động nào.</td></tr>";
+                    echo "<tr><td colspan='7'>Không có hoạt động nào.</td></tr>";
                 }
                 //$conn->close(); // PDO does not have a close method like mysqli
                 ?>
