@@ -1,4 +1,4 @@
-<?php include '../../includes/db_connect.php'; ?>
+<?php session_start(); include '../../includes/db_connect.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,11 +22,25 @@
                         <a class="nav-link" href="/project1">Danh sách nhân sự</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active text-white" aria-current="page" href="/project1/activities/activity_management.php">Quản lý hoạt động</a>
+                        <a class="nav-link active text-white" aria-current="page" href="/project1/views/activities/activity_management.php">Quản lý hoạt động</a>
                     </li>
                 </ul>
             </div>
         </nav>
+
+        <?php
+        // Display session messages
+        if (isset($_SESSION['message'])) {
+            $message_type = $_SESSION['message_type'] ?? 'info'; // Default to info if type not set
+            echo '<div class="alert alert-' . $message_type . ' alert-dismissible fade show" role="alert">';
+            echo htmlspecialchars($_SESSION['message']);
+            echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
+            echo '</div>';
+            unset($_SESSION['message']); // Clear the message after displaying
+            unset($_SESSION['message_type']); // Clear the message type as well
+        }
+        ?>
+
         <div class="main-heading">Quản Lý Hoạt Động</div> <!-- Changed from h1 to div with class main-heading -->
         <div class="statistics mb-4 p-3 border rounded">
             <h2 class="text-center mb-3">Thống Kê Hoạt Động</h2>
@@ -72,7 +86,7 @@
             $most_active_member_json = json_encode($most_active_members_data);
             ?>
         </div>
-        <a href="/project1/activities/add_activity.php" class="btn btn-primary mb-3">Thêm Hoạt Động Mới</a>
+        <a href="/project1/views/activities/add_activity.php" class="btn btn-primary mb-3">Thêm Hoạt Động Mới</a>
         <table class="table table-bordered table-striped">
             <thead>
                 <tr>
@@ -109,7 +123,7 @@
                         echo "<td>" . (empty($row['participating_members']) ? 'Chưa có' : htmlspecialchars($row['participating_members'])) . "</td>";
                         echo "<td>" . $row['total_participants'] . "</td>";
                         echo "<td>
-                                <a href='/project1/activities/manage_participation.php?activity_id=" . $row["id"] . "' class='btn btn-secondary btn-sm'>Quản lý tham gia</a>
+                                <a href='/project1/views/activities/manage_participation.php?activity_id=" . $row["id"] . "' class='btn btn-secondary btn-sm'>Quản lý tham gia</a>
                               </td>";
                         echo "</tr>";
                     }

@@ -20,14 +20,14 @@
                         <a class="nav-link active text-white" aria-current="page" href="/project1">Danh sách nhân sự</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="views/activities/activity_management.php">Quản lý hoạt động</a>
+                        <a class="nav-link" href="/project1/views/activities/activity_management.php">Quản lý hoạt động</a>
                     </li>
                 </ul>
             </div>
         </nav>
 
         <h3>Danh Sách Thành Viên</h3>
-        <a href="/project1/add.php" class="button">Thêm Thành Viên Mới</a>
+        <a href="/project1/views/add_member.php" class="button">Thêm Thành Viên Mới</a>
         <table>
             <thead>
                 <tr>
@@ -65,8 +65,8 @@
                         echo "</td>";
                         echo "<td>" . $row["join_date"] . "</td>";
                         echo "<td>
-                                <a href='/project1/edit.php?id=" . $row["id"] . "' class='button edit'>Sửa</a>
-                                <a href='/project1/delete.php?id=" . $row["id"] . "' class='button delete'>Xóa</a>
+                                <a href='/project1/views/edit_member.php?id=" . $row["id"] . "' class='button edit'>Sửa</a>
+                                <a href='/project1/views/delete_member.php?id=" . $row["id"] . "' class='button delete'>Xóa</a>
                               </td>";
                         echo "</tr>";
                     }

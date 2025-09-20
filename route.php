@@ -13,14 +13,14 @@ $request_uri = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
 $routes = [
     '' => 'views/members.php', // Default route for the homepage when URI is empty after base path removal
     'project1' => 'views/members.php', // Route for direct access to /project1/
-    'views/add_member.php' => 'views/add_member.php', // New route for adding a member with explicit views prefix
-    'views/edit_member.php' => 'views/edit_member.php', // New route for editing a member with explicit views prefix
-    'views/delete_member.php' => 'views/delete_member.php', // New route for deleting a member with explicit views prefix
-    'views/activities/activity_management.php' => 'views/activities/activity_management.php', // Route for activity management with explicit views prefix
-    'views/activities/add_activity.php' => 'views/activities/add_activity.php', // Route for adding an activity with explicit views prefix
-    'views/activities/edit_activity.php' => 'views/activities/edit_activity.php', // Route for editing an activity with explicit views prefix
-    'views/activities/delete_activity.php' => 'views/activities/delete_activity.php', // Route for deleting an activity with explicit views prefix
-    'views/activities/manage_participation.php' => 'views/activities/manage_participation.php', // Route for managing participation with explicit views prefix
+    'views/add_member.php' => 'views/add_member.php', // Route for adding a member
+    'views/edit_member.php' => 'views/edit_member.php', // Route for editing a member
+    'views/delete_member.php' => 'views/delete_member.php', // Route for deleting a member
+    'views/activities/activity_management.php' => 'views/activities/activity_management.php', // Route for activity management
+    'views/activities/add_activity.php' => 'views/activities/add_activity.php', // Route for adding an activity
+    'views/activities/edit_activity.php' => 'views/activities/edit_activity.php', // Route for editing an activity
+    'views/activities/delete_activity.php' => 'views/activities/delete_activity.php', // Route for deleting an activity
+    'views/activities/manage_participation.php' => 'views/activities/manage_participation.php', // Route for managing participation
 ];
 
 // Remove the project subdirectory from the request URI if present
