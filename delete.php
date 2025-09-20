@@ -1,20 +1,3 @@
 <?php
-include 'includes/db_connect.php';
-
-if (isset($_GET['id'])) {
-    $id = $_GET['id'];
-
-    $sql = "DELETE FROM members WHERE id = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->execute([$id]);
-
-    header("Location: index.php");
-    exit();
-
-    //$stmt->close(); // PDO does not have a close method like mysqli
-    //$conn->close(); // PDO does not have a close method like mysqli
-} else {
-    header("Location: index.php");
-    exit();
-}
+require __DIR__ . '/route.php';
 ?>

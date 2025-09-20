@@ -1,6 +1,5 @@
 <?php
 session_start(); // Start the session
-include '../../includes/db_connect.php';
 
 $activity_id = $_GET['activity_id'] ?? null;
 
@@ -56,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     // Add a success message to the session before redirecting
     $_SESSION['success_message'] = "Cập nhật trạng thái tham gia thành công!";
-    header("Location: manage_participation.php?activity_id=" . $activity_id);
+    header("Location: /project1/activities/manage_participation.php?activity_id=" . $activity_id); // Updated redirect path
     exit();
 } // End of POST request handler
 
@@ -82,29 +81,29 @@ $members = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản Lý Tham Gia Hoạt Động</title>
-    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../css/style.css"> <!-- Updated path -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 <body>
     <div class="container">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
-            <a class="navbar-brand" href="#">Quản Lý</a>
+            <a class="navbar-brand" href="/project1">Quản Lý</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="../../index.php">Danh sách nhân sự</a>
+                        <a class="nav-link" href="/project1">Danh sách nhân sự</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active text-white" aria-current="page" href="activity_management.php">Quản lý hoạt động</a>
+                        <a class="nav-link active text-white" aria-current="page" href="/project1/activities/activity_management.php">Quản lý hoạt động</a>
                     </li>
                 </ul>
             </div>
         </nav>
         <h1 class="my-4 text-center">Quản Lý Tham Gia Hoạt Động: <?php echo htmlspecialchars($activity['name']); ?></h1>
-        <form action="manage_participation.php?activity_id=<?php echo $activity_id; ?>" method="POST">
+        <form action="/project1/activities/manage_participation.php?activity_id=<?php echo $activity_id; ?>" method="POST"> <!-- Updated action path -->
             <input type="hidden" name="activity_id" value="<?php echo $activity_id; ?>">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-3 mb-3">
                 <?php foreach ($members as $member): ?>
@@ -118,7 +117,7 @@ $members = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
             <div class="d-grid gap-2">
                 <button type="submit" class="btn btn-primary">Lưu Thay Đổi</button>
-                <a href="activity_management.php" class="btn btn-secondary">Quay lại quản lý hoạt động</a>
+                <a href="/project1/activities/activity_management.php" class="btn btn-secondary">Quay lại quản lý hoạt động</a> <!-- Updated href -->
             </div>
         </form>
     </div>
