@@ -1,3 +1,4 @@
+<?php include '../../includes/db_connect.php'; ?>
 <?php
 session_start(); // Start the session
 
@@ -55,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     // Add a success message to the session before redirecting
     $_SESSION['success_message'] = "Cập nhật trạng thái tham gia thành công!";
-    header("Location: /project1/activities/manage_participation.php?activity_id=" . $activity_id); // Updated redirect path
+    header("Location: /project1/views/activities/manage_participation.php?activity_id=" . $activity_id); // Corrected redirect path to include views
     exit();
 } // End of POST request handler
 
@@ -97,13 +98,13 @@ $members = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <a class="nav-link" href="/project1">Danh sách nhân sự</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active text-white" aria-current="page" href="/project1/activities/activity_management.php">Quản lý hoạt động</a>
+                        <a class="nav-link active text-white" aria-current="page" href="/project1/views/activities/activity_management.php">Quản lý hoạt động</a>
                     </li>
                 </ul>
             </div>
         </nav>
         <h1 class="my-4 text-center">Quản Lý Tham Gia Hoạt Động: <?php echo htmlspecialchars($activity['name']); ?></h1>
-        <form action="/project1/activities/manage_participation.php?activity_id=<?php echo $activity_id; ?>" method="POST"> <!-- Updated action path -->
+        <form action="/project1/views/activities/manage_participation.php?activity_id=<?php echo $activity_id; ?>" method="POST"> <!-- Corrected action path to include views -->
             <input type="hidden" name="activity_id" value="<?php echo $activity_id; ?>">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-3 mb-3">
                 <?php foreach ($members as $member): ?>
@@ -117,7 +118,7 @@ $members = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
             <div class="d-grid gap-2">
                 <button type="submit" class="btn btn-primary">Lưu Thay Đổi</button>
-                <a href="/project1/activities/activity_management.php" class="btn btn-secondary">Quay lại quản lý hoạt động</a> <!-- Updated href -->
+                <a href="/project1/views/activities/activity_management.php" class="btn btn-secondary">Quay lại quản lý hoạt động</a> <!-- Corrected href to absolute, with views -->
             </div>
         </form>
     </div>
